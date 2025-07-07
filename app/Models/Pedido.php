@@ -110,4 +110,35 @@ class Pedido
         $stmt = $this->db->prepare("DELETE FROM pedidos WHERE id = ?");
         return $stmt->execute([$id]);
     }
+
+    public function listarPorStatusEPrevisao($statusArray, $dias)
+    {
+        $in = implode(',', array_fill(0, count($statusArray), '?'));
+        $sql = "SELECT p.*, c.nome as cliente
+                FROM pedidos p
+                JOIN clientes c ON c.id = p.cliente_id
+                WHERE p.status IN ($in)
+                AND previsao_entrega BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL ? DAY)
+                ORDER BY previsao_entrega ASC";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([...$statusArray, $dias]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function listarPorStatus($statusArray)
+    {
+        $in = implode(',', array_fill(0, count($statusArray), '?'));
+        $sql = "SELECT p.*, c.nome as cliente
+                FROM pedidos p
+                JOIN clientes c ON c.id = p.cliente_id
+                WHERE p.status IN ($in)
+                ORDER BY p.data_pedido DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($statusArray);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
+s
