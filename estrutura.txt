@@ -1,0 +1,24 @@
+/sistema3/
+│
+├── app/
+│   ├── Config/             → Configurações e helpers
+│   ├── Core/               → Router, Database, Autoload
+│   ├── Controllers/        → Todos os controladores
+│   ├── Models/             → Todos os modelos
+│   └── Views/              → Subdividida por módulo
+│       ├── layout/         → header.php, footer.php
+│       ├── clientes/       → index.php, form_cliente.php
+│       ├── produtos/       → ...
+│       └── financeiro/     → ...
+│
+├── public/                 → Pasta pública (root do servidor)
+│   ├── index.php           → Entrada principal do sistema
+│   ├── assets/
+│   │   ├── css/
+│   │   └── js/
+│   │       └── table.js
+│
+├── vendor/                 → Pasta do Composer (criada após `composer install`)
+│
+├── composer.json           → Autoload e dependências
+└── README.md               → Instruções do projeto
