@@ -53,7 +53,7 @@ include '../includes/header.php';
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
 <script src="../assets/js/clientes_form.js"></script>
 
 <script>
@@ -94,9 +94,10 @@ $(document).ready(function () {
             }
         ],
         language: {
-            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+            url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json"
         },
         initComplete: function () {
+            console.log(this.api().i18n());
             tabela.buttons().container().appendTo('#export-buttons-clientes');
         }
     });

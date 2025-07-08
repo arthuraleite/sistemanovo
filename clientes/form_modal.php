@@ -1,5 +1,6 @@
 <?php
 require_once '../includes/db.php';
+require_once '../includes/config.php';
 
 $id = $_GET['id'] ?? null;
 $cliente = [
@@ -32,7 +33,7 @@ if ($id) {
     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 </div>
 
-<form id="formCliente" method="POST" action="salvar.php">
+<form id="formCliente" method="POST" action="<?= BASE_URL ?>/clientes/salvar.php">
     <div class="modal-body">
         <input type="hidden" name="id" value="<?= $cliente['id'] ?>">
 
@@ -48,8 +49,8 @@ if ($id) {
         </div>
 
         <div class="mb-3">
-            <label>Tipo</label>
-            <input type="text" id="tipo" name="tipo" class="form-control" readonly value="<?= $cliente['tipo'] == 'J' ? 'Jurídico' : 'Físico' ?>">
+            <label>Tipo de Pessoa</label>
+            <input type="text" id="tipo" name="tipo" class="form-control" readonly value="<?= $cliente['tipo'] == 'J' ? 'Jurídica' : 'Física' ?>">
         </div>
 
         <div class="mb-3">

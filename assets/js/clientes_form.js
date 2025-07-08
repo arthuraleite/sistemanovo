@@ -7,14 +7,16 @@ function aplicarMascarasCliente() {
     $cpfCnpj.on('input', function() {
         const valor = $(this).val().replace(/\D/g, '');
         const isCNPJ = valor.length > 11;
-        
+        console.log(valor.length);
         // Aplica a formatação sem usar .mask()
         if (isCNPJ) {
             $(this).val(formatarCNPJ(valor));
             $('#dadosJuridicos').show();
+            document.getElementById('tipo').value = "Jurídica";
         } else {
             $(this).val(formatarCPF(valor));
             $('#dadosJuridicos').hide();
+             document.getElementById('tipo').value = "Física";
         }
     });
 

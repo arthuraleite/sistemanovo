@@ -97,7 +97,7 @@ $(document).ready(function () {
             }
         ],
         language: {
-            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+            url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json"
         },
         initComplete: function () {
             // Move os botões para a div personalizada

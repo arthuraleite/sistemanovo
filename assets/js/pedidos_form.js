@@ -115,26 +115,84 @@ $(document).ready(function () {
     });
 
     // Abrir modal de novo cliente a partir do formulário de pedido
-    $(document).on('click', '#btnNovoClientePedido', function () {
+    $(document).on('click', '#btnNovoClientePedido', function() {
         // Oculta o modal de pedido temporariamente
         $('#modalPedido').modal('hide');
 
-        $.get('../clientes/form_modal.php', function (html) {
-            const modal = `
-                <div class="modal fade" id="modalClienteInterno" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">${html}</div>
-                </div>
-                </div>
-            `;
-            $('body').append(modal);
+        $.get('../clientes/form_modal.php', function(html) {
 
+            const novoTexto = html.replace('/salvar.php', "/salvar_pedido.php");
+            console.log(novoTexto);
+            // console.log(html);
+            const modal = `
+            <div class="modal fade" id="modalClienteInterno" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+            <div class="modal-content">${html}</div>
+            </div>
+            </div>
+            `
+
+            $('body').append(modal);
             const modalInstance = new bootstrap.Modal(document.getElementById('modalClienteInterno'));
+
+            // Aplica as máscaras após o modal ser completamente carregado
+            $('#modalClienteInterno').on('shown.bs.modal', function() {
+                // Versão otimizada da função de máscaras
+                function aplicarMascarasClienteModal() {
+                    // Máscara CPF/CNPJ
+                    $('#cpf_cnpj').on('input', function() {
+                        const valor = $(this).val().replace(/\D/g, '');
+                        const isCNPJ = valor.length > 11;
+                        
+                        if (isCNPJ) {
+                            $(this).val(valor.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5'));
+                            $('#dadosJuridicos').show();
+                            document.getElementById('tipo').value = "Jurídica";
+                        } else {
+                            $(this).val(valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'));
+                            $('#dadosJuridicos').hide();
+                            document.getElementById('tipo').value = "Física";
+                        }
+                    });
+
+                    // Máscara telefone
+                    $('#telefone').on('input', function() {
+                        const valor = $(this).val().replace(/\D/g, '');
+                        $(this).val(valor.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3'));
+                    });
+
+                    // Máscara CEP
+                    $('#cep').on('input', function() {
+                        const valor = $(this).val().replace(/\D/g, '');
+                        $(this).val(valor.replace(/(\d{5})(\d{3})/, '$1-$2'));
+                    });
+
+                    // Busca CEP
+                    $('#cep').on('blur', function() {
+                        const cep = $(this).val().replace(/\D/g, '');
+                        if (cep.length === 8) {
+                            fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                                .then(response => response.json())
+                                .then(dados => {
+                                    if (!dados.erro) {
+                                        $('#logradouro').val(dados.logradouro);
+                                        $('#bairro').val(dados.bairro);
+                                        $('#cidade').val(dados.localidade);
+                                    }
+                                });
+                        }
+                    });
+                }
+
+                // Aplica as máscaras
+                aplicarMascarasClienteModal();
+            });
+
             modalInstance.show();
 
             // Ao fechar o modal de cliente, remove e mostra novamente o de pedido
-            $('#modalClienteInterno').on('hidden.bs.modal', function () {
-                $('#modalClienteInterno').remove();
+            $('#modalClienteInterno').on('hidden.bs.modal', function() {
+                $(this).remove();
                 $('#modalPedido').modal('show');
             });
         });
